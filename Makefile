@@ -11,6 +11,9 @@ HECTOR_INC_DIR = $(HECTOR_DIR)/include/
 
 OBJ_DIR = obj/
 INC_DIR = include/
+SRC_DIR = src/
+
+PYTHIA_OBJ = $(OBJ_DIR)pythia6428.fo $(OBJ_DIR)Pythia6Wrapper.o
 
 all: propagator
 
@@ -20,10 +23,13 @@ clean:
 hector:
 	@cd $(HECTOR_DIR) && $(MAKE) -s
 
-propagator: $(OBJ_DIR)propagator.o $(OBJ_DIR)pythia6428.fo | hector
+propagator: $(OBJ_DIR)propagator.o $(PYTHIA_OBJ) | hector
 	$(CC) $(LDFLAGS) $^ -o $@ -L$(HECTOR_LIB_DIR) -lHector -Wl,-R$(HECTOR_LIB_DIR) $(ROOT_LDFLAGS)
 
 $(OBJ_DIR)%.o: %.cpp | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $^ -o $@ -I$(INC_DIR) -I$(HECTOR_INC_DIR) $(ROOT_CFLAGS)
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.cpp | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $^ -o $@ -I$(INC_DIR) -I$(HECTOR_INC_DIR) $(ROOT_CFLAGS)
 
 $(OBJ_DIR)%.fo: external/%.f | $(OBJ_DIR)

@@ -15,7 +15,7 @@ INC_DIR = include/
 all: propagator
 
 clean:
-	rm -rf $(OBJ_DIR) propagator
+	rm -rf $(OBJ_DIR)/*.o propagator
 
 hector:
 	@cd $(HECTOR_DIR) && $(MAKE) -s

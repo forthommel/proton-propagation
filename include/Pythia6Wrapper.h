@@ -10,13 +10,15 @@
 //#include "HepPID/ParticleIDTranslations.hh"
 
 
-extern "C" 
+extern "C"
 {
   // subroutines
   void pygive_(const char* chin, int sz);
+  int pychge_(int& pdgid);
 }
 
 bool call_pygive(const std::string &line);
+inline int call_pychge(int pdgid) { return pychge_(pdgid); }
 std::vector<TLorentzVector> getPythiaParticles(bool stable_only=false);
 int getStatusFromPythia(int py, int fallback=-1);
 HepMC::GenEvent getEvent();

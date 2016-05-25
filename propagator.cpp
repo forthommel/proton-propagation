@@ -1,5 +1,6 @@
 #include <iostream>
 #include "H_BeamLine.h"
+#include "H_BeamParticle.h"
 #include "Pythia6Wrapper.h"
 
 using namespace std;
@@ -35,9 +36,28 @@ int main(int argc, char* argv[])
   cout << " --> interaction points: " << b1.getIP() << " -- " << b2.getIP() << endl
        << " --> number of elements: " << b1.getNumberOfElements() << " -- " << b2.getNumberOfElements() << endl;
 
-  for(HepMC::GenEvent::particle_const_iterator p=ev.particles_begin(); p!=ev.particles_end(); p++) {
-    if ((*p)->status()!=1) continue; // we only keep stable, final state particles
-    unsigned int id = (*p)->barcode();
+  for(HepMC::GenEvent::particle_const_iterator ip=ev.particles_begin(); ip!=ev.particles_end(); ip++) {
+    HepMC::GenParticle* p = (*ip);
+    if (p->status()!=1) continue; // we only keep stable, final state particles
+    unsigned int id = p->barcode();
+    if (p->pdg_id()!=2212) continue; // we only propagate protons
+    H_BeamParticle* hp = new H_BeamParticle(p->generatedMass(), call_pychge(p->pdg_id()));
+    hp->setPosition(-p->production_vertex()->position().x(), //FIXME units?!
+                     p->production_vertex()->position().y(),
+                     0.0, 0.0, // urad
+                     p->production_vertex()->position().z());
+    hp->set4Momentum(-p->momentum().x(),
+                      p->momentum().y(),
+                     -p->momentum().z(),
+                      p->momentum().e());
+    H_BeamLine* prop_beamline = (p->momentum().z()>0) ? &b1 : &b2; //FIXME need to check the direction
+    hp->computePath(prop_beamline);
+    bool stopped = hp->stopped(prop_beamline);
+    cout << "is stopped? " << stopped << endl;
+    if (stopped) {
+      cout << "stopping element: s=" << hp->getStoppingElement()->getS() << endl;
+      continue;
+    }
   }
 
   return 0;

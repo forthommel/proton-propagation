@@ -37,10 +37,10 @@ getEvent()
   //FIXME
   evt.weights().push_back(pyint1.vint[96]*1.e9);
   evt.weights().push_back(1./(pyint1.vint[98]));
-call_pylist(2);
+  //call_pylist(2);
   std::vector<HepMC::GenParticle*> hepmc_particles;
   for (int iprt=0; iprt<2; iprt++) {
-    std::cout << iprt << " --> " << pyjets.k[2][iprt] << std::endl;
+    //std::cout << iprt << " --> " << pyjets.k[2][iprt] << std::endl;
     HepMC::FourVector pmom(pyjets.p[0][iprt], pyjets.p[1][iprt], pyjets.p[2][iprt], pyjets.p[3][iprt]);
     int dstatus = getStatusFromPythia(pyjets.k[0][iprt]);
     HepMC::GenParticle* primary = new HepMC::GenParticle(pmom, pyjets.k[1][iprt], dstatus); //FIXME

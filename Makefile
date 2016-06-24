@@ -23,8 +23,11 @@ clean:
 hector:
 	@cd $(HECTOR_DIR) && $(MAKE) -s
 
+hector-clean:
+	@cd $(HECTOR_DIR) && $(MAKE) -s clean
+
 propagator: $(OBJ_DIR)propagator.o $(PYTHIA_OBJ) | hector
-	$(CC) $(LDFLAGS) $^ -o $@ -L$(HECTOR_LIB_DIR) -lHector -Wl,-R$(HECTOR_LIB_DIR) $(ROOT_LDFLAGS) -lHepMC
+	$(CC) $(LDFLAGS) $^ -o $@ -L$(HECTOR_LIB_DIR) -lHector -Wl,-R$(HECTOR_LIB_DIR),-R`root-config --libdir` $(ROOT_LDFLAGS) -lHepMC
 
 $(OBJ_DIR)%.o: %.cpp | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $^ -o $@ -I$(INC_DIR) -I$(HECTOR_INC_DIR) $(ROOT_CFLAGS)

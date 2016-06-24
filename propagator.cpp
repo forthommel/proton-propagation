@@ -11,8 +11,9 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-  const unsigned int nevents = 1000;
-  const double pps_z_position = 204.;
+  const unsigned int nevents = 10000;
+  //const double pps_z_position = 204.;
+  const double pps_z_position = 215.5;
   const bool debug = false;
 
   // initialize Pythia
